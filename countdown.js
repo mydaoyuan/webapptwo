@@ -7,15 +7,22 @@ var MARGIN_TOP = 20;
 var balls = [];
 const colors = ["#33B5E5","#0099CC","#AA66CC","#9933CC","#99CC00","#669900","#FFBB33","#FF8800","#FF4444","#CC0000"];
 var afterTime = -1;
+var isMobile = false;
 window.onload = function() {
 
-	// W = document.body.clientWidth
-	// H = document.body.clientHeight
+	if (document.body.clientWidth<600) {
+		isMobile = true;
+	}
 
-	// MARGIN_LEFT = Math.round(W /10);
-	// R = Math.round(W * 4 / 5 / 108)-1
+	W = document.body.clientWidth
 
-	// MARGIN_TOP = Math.round(H /5);
+	H = document.documentElement.clientHeight - 40
+	MARGIN_LEFT = Math.round(W /10);
+	R = Math.round(W * 4 / 5 / 108)-1
+	if (isMobile) {
+		R = W/40;
+	}
+	MARGIN_TOP = Math.round(H /5);
 
 	var canvas = document.getElementById('mycanvas');
 	var can = canvas.getContext('2d');
@@ -43,15 +50,22 @@ function render(cxt) {
 	var seconds = nowTime % 60;
 	cxt.clearRect(0,0,W, H);
 
-	// 一个数字15个小球 分号9个小球
-	renball(MARGIN_LEFT, MARGIN_TOP, parseInt(hours /10), cxt);
-	renball(MARGIN_LEFT + 15*(R+1), MARGIN_TOP, parseInt(hours %10), cxt);
-	renball(MARGIN_LEFT + 30*(R+1), MARGIN_TOP, 10, cxt);
-	renball(MARGIN_LEFT + 39*(R+1), MARGIN_TOP, parseInt(minutes/10), cxt);
-	renball(MARGIN_LEFT + 54*(R+1), MARGIN_TOP, parseInt(minutes%10), cxt);
-	renball(MARGIN_LEFT + 69*(R+1), MARGIN_TOP, 10, cxt);
-	renball(MARGIN_LEFT + 78*(R+1), MARGIN_TOP, parseInt(seconds/10), cxt);
-	renball(MARGIN_LEFT + 93*(R+1), MARGIN_TOP, parseInt(seconds%10), cxt);
+	if (isMobile) {
+		renball(MARGIN_LEFT + 0, MARGIN_TOP, parseInt(seconds/10), cxt);
+		renball(MARGIN_LEFT + 15*(R+1), MARGIN_TOP, parseInt(seconds%10), cxt);
+	} else {
+		// 一个数字15个小球 分号9个小球
+		renball(MARGIN_LEFT, MARGIN_TOP, parseInt(hours /10), cxt);
+		renball(MARGIN_LEFT + 15*(R+1), MARGIN_TOP, parseInt(hours %10), cxt);
+		renball(MARGIN_LEFT + 30*(R+1), MARGIN_TOP, 10, cxt);
+		renball(MARGIN_LEFT + 39*(R+1), MARGIN_TOP, parseInt(minutes/10), cxt);
+		renball(MARGIN_LEFT + 54*(R+1), MARGIN_TOP, parseInt(minutes%10), cxt);
+		renball(MARGIN_LEFT + 69*(R+1), MARGIN_TOP, 10, cxt);
+		renball(MARGIN_LEFT + 78*(R+1), MARGIN_TOP, parseInt(seconds/10), cxt);
+		renball(MARGIN_LEFT + 93*(R+1), MARGIN_TOP, parseInt(seconds%10), cxt);
+	}
+
+
 	for( var i = 0 ; i < balls.length ; i ++ ){
 	    cxt.fillStyle=balls[i].color;
 
@@ -89,24 +103,34 @@ function update() {
 	// 	ball.vx = -ball.vx*1.2
 	// }
 	if (afterTime != nowTime) {
-		if( parseInt(nowhours/10) != parseInt(afterhours/10) ){
-		    addBalls( MARGIN_LEFT + 0 , MARGIN_TOP , parseInt(nowhours/10) );
+		if (isMobile) {
+			if( parseInt(nowseconds/10) != parseInt(afterseconds/10) ){
+			    addBalls( MARGIN_LEFT + 0 , MARGIN_TOP , parseInt(nowseconds/10) );
+			}
+			if( parseInt(nowseconds%10) != parseInt(afterseconds%10) ){
+			    addBalls( MARGIN_LEFT + 15*(R+1) , MARGIN_TOP , parseInt(nowseconds%10) );
+			}
+		} else {
+			if( parseInt(nowhours/10) != parseInt(afterhours/10) ){
+			    addBalls( MARGIN_LEFT + 0 , MARGIN_TOP , parseInt(nowhours/10) );
+			}
+			if( parseInt(nowhours%10) != parseInt(afterhours%10) ){
+			    addBalls( MARGIN_LEFT + 15*(R+1) , MARGIN_TOP , parseInt(nowhours%10) );
+			}
+			if( parseInt(nowminutes/10) != parseInt(afterminutes/10) ){
+			    addBalls( MARGIN_LEFT + 39*(R+1) , MARGIN_TOP , parseInt(nowminutes/10) );
+			}
+			if( parseInt(nowminutes%10) != parseInt(afterminutes%10) ){
+			    addBalls( MARGIN_LEFT + 54*(R+1) , MARGIN_TOP , parseInt(nowminutes%10) );
+			}
+			if( parseInt(nowseconds/10) != parseInt(afterseconds/10) ){
+			    addBalls( MARGIN_LEFT + 78*(R+1) , MARGIN_TOP , parseInt(nowseconds/10) );
+			}
+			if( parseInt(nowseconds%10) != parseInt(afterseconds%10) ){
+			    addBalls( MARGIN_LEFT + 93*(R+1) , MARGIN_TOP , parseInt(nowseconds%10) );
+			}
 		}
-		if( parseInt(nowhours%10) != parseInt(afterhours%10) ){
-		    addBalls( MARGIN_LEFT + 15*(R+1) , MARGIN_TOP , parseInt(nowhours%10) );
-		}
-		if( parseInt(nowminutes/10) != parseInt(afterminutes/10) ){
-		    addBalls( MARGIN_LEFT + 39*(R+1) , MARGIN_TOP , parseInt(nowminutes/10) );
-		}
-		if( parseInt(nowminutes%10) != parseInt(afterminutes%10) ){
-		    addBalls( MARGIN_LEFT + 54*(R+1) , MARGIN_TOP , parseInt(nowminutes%10) );
-		}
-		if( parseInt(nowseconds/10) != parseInt(afterseconds/10) ){
-		    addBalls( MARGIN_LEFT + 78*(R+1) , MARGIN_TOP , parseInt(nowseconds/10) );
-		}
-		if( parseInt(nowseconds%10) != parseInt(afterseconds%10) ){
-		    addBalls( MARGIN_LEFT + 93*(R+1) , MARGIN_TOP , parseInt(nowseconds%10) );
-		}
+
 	}
 	afterTime = nowTime;
 	updateBalls();
@@ -120,7 +144,12 @@ function updateBalls() {
 
 		if (balls[i].y >= H - R) {
 			balls[i].y = H - R;
-			balls[i].vy = -balls[i].vy*0.7;
+			if (isMobile) {
+				balls[i].vy = -balls[i].vy*0.5;
+			} else {
+				balls[i].vy = -balls[i].vy*0.7;
+			}
+			
 		}
 	}
 	var cnt = 0;
