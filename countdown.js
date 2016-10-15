@@ -1,6 +1,7 @@
 var W = 1024;
 var H = 600;
 var R = 8;
+var minR = 8;
 var MARGIN_LEFT = 20;
 var MARGIN_TOP = 20;
 // var ball = {x:512, y:100, r:20, vx:-4, vy:-10, g:2, color:'#005588'};
@@ -21,6 +22,7 @@ window.onload = function() {
 	R = Math.round(W * 4 / 5 / 108)-1
 	if (isMobile) {
 		R = W/40;
+		minR = W/180;
 	}
 	MARGIN_TOP = Math.round(H /5);
 
@@ -51,8 +53,14 @@ function render(cxt) {
 	cxt.clearRect(0,0,W, H);
 
 	if (isMobile) {
-		renball(MARGIN_LEFT + 0, MARGIN_TOP, parseInt(seconds/10), cxt);
-		renball(MARGIN_LEFT + 15*(R+1), MARGIN_TOP, parseInt(seconds%10), cxt);
+		renminball(0, 20, parseInt(hours /10), cxt);
+		renminball(0 + 15*(minR+1), 20, parseInt(hours %10), cxt);
+		renminball(0 + 30*(minR+1), 20, 10, cxt);
+		renminball(0 + 39*(minR+1), 20, parseInt(minutes/10), cxt);
+		renminball(0 + 54*(minR+1), 20, parseInt(minutes%10), cxt);
+
+		renball(MARGIN_LEFT + 0, 160, parseInt(seconds/10), cxt);
+		renball(MARGIN_LEFT + 15*(R+1), 160, parseInt(seconds%10), cxt);
 	} else {
 		// 一个数字15个小球 分号9个小球
 		renball(MARGIN_LEFT, MARGIN_TOP, parseInt(hours /10), cxt);
@@ -187,6 +195,26 @@ function renball(p_w, p_h, num, cxt) {
 			if(digit[num][i][j] ===1 ) {
 				cxt.beginPath();
 				cxt.arc(p_w+2*j*(R+1)+(R+1),p_h+2*i*(R+1)+(R+1), R, 0, 2*Math.PI);
+				cxt.fill();
+				// cxt.stroke();
+			}
+		}
+	}
+
+	// cxt.fillStyle = ball.color;
+	// cxt.beginPath();
+	// cxt.arc(ball.x, ball.y, ball.r, 0, 2*Math.PI);
+	// cxt.closePath();
+	// cxt.fill();
+}
+
+function renminball(p_w, p_h, num, cxt) {
+	cxt.fillStyle = 'rgb(0,102,153)';
+	for(var i=0;i<digit[num].length;i++) {
+		for(var j=0; j<digit[num][i].length;j++) {
+			if(digit[num][i][j] ===1 ) {
+				cxt.beginPath();
+				cxt.arc(p_w+2*j*(minR+1)+(minR+1),p_h+2*i*(minR+1)+(minR+1), minR, 0, 2*Math.PI);
 				cxt.fill();
 				// cxt.stroke();
 			}
