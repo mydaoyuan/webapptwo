@@ -59,8 +59,8 @@ function render(cxt) {
 		renminball(0 + 39*(minR+1), 20, parseInt(minutes/10), cxt);
 		renminball(0 + 54*(minR+1), 20, parseInt(minutes%10), cxt);
 
-		renball(MARGIN_LEFT + 0, 160, parseInt(seconds/10), cxt);
-		renball(MARGIN_LEFT + 15*(R+1), 160, parseInt(seconds%10), cxt);
+		renball(MARGIN_LEFT + 0, 100, parseInt(seconds/10), cxt);
+		renball(MARGIN_LEFT + 15*(R+1), 100, parseInt(seconds%10), cxt);
 	} else {
 		// 一个数字15个小球 分号9个小球
 		renball(MARGIN_LEFT, MARGIN_TOP, parseInt(hours /10), cxt);
